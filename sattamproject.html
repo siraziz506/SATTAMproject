@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار العمليات على الكسور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet"> <!-- إضافة خط أندلسي -->
+    <style>
+        body {
+            font-family: 'Amiri', serif; /* استخدام الخط الأندلسي */
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to right, #aeeeee, #ffffff); /* خلفية بتدرج أزرق فاتح إلى أبيض */
+            color: #333; /* لون الخط رمادي غامق */
+            position: relative; /* لجعل النص في الزاوية */
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 112.5px;  /* زيادة padding بنسبة 50% */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            max-width: 1350px; /* زيادة العرض بنسبة 50% */
+            margin: 50px auto; /* مركز الصفحة مع مسافة من الأعلى */
+        }
+        input {
+            margin: 10px;
+            padding: 10px;
+            font-size: 20px; /* زيادة حجم الخط */
+            width: 120px; /* عرض أكبر للحقل */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 15px 20px; /* زيادة حجم الأزرار */
+            font-size: 20px; /* زيادة حجم الخط */
+            border: none;
+            border-radius: 5px;
+            background-color: #2196F3; /* لون الزر إلى الأزرق */
+            color: white; /* لون النص بالزر أبيض */
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1976D2; /* لون الزر عند التمرير */
+        }
+        h2 {
+            font-size: 28px; /* زيادة حجم العنوان */
+            margin-top: 20px;
+            color: #333; /* لون العنوان رمادي غامق */
+        }
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 24px; /* زيادة حجم الكسور */
+        }
+        .fraction span {
+            display: block;
+            border-top: 1px solid #333; /* إبقاء الحدود العلوية باللون الرمادي */
+            margin: 0 auto;
+        }
+        .footer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #333; /* لون النص رمادي غامق */
+            font-weight: bold;
+            font-size: 24px; /* تكبير النص */
+        }
+        .correct {
+            color: green;
+            animation: fadeIn 0.5s;
+        }
+        .wrong {
+            color: red;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="footer">
+        عمل الطالب: سطام مفلح القحطاني
+    </div>
+
+    <div class="container">
+        <h1>اختبار العمليات على الكسور</h1>
+        
+        <h3>اختر عملية:</h3>
+        <button onclick="generateQuestion('add')">جمع</button>
+        <button onclick="generateQuestion('subtract')">طرح</button>
+        <button onclick="generateQuestion('multiply')">ضرب</button>
+        <button onclick="generateQuestion('divide')">قسمة</button>
+        
+        <div id="question" style="margin-top: 20px;"></div>
+        
+        <input type="text" id="answer" placeholder="أدخل الإجابة هنا">
+        <button onclick="checkAnswer()">تحقق</button>
+        
+        <h2 id="result"></h2>
+    </div>
+
+    <audio id="correctSound" src="correct.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="wrong.mp3" preload="auto"></audio>
+    <audio id="submitSound" src="submit.mp3" preload="auto"></audio>
+
+    <script>
+        let correctAnswer = '';
+
+        function generateQuestion(operation) {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const den1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const den2 = Math.floor(Math.random() * 10) + 1;
+
+            if (operation === 'add') {
+                const sumNum = (num1 * den2) + (num2 * den1);
+                const sumDen = den1 * den2;
+                correctAnswer = `${sumNum}/${sumDen}`;
+                document.getElementById('question').innerHTML = `
+                    <div class="fraction">${num1}<span>${den1}</span></div>
+                    + 
+                    <div class="fraction">${num2}<span>${den2}</span></div>
+                    <div>ما هي نتيجة الجمع؟</div>
+                `;
+            } else if (operation === 'subtract') {
+                const subNum = (num1 * den2) - (num2 * den1);
+                const subDen = den1 * den2;
+                correctAnswer = `${subNum}/${subDen}`;
+                document.getElementById('question').innerHTML = `
+                    <div class="fraction">${num1}<span>${den1}</span></div>
+                    - 
+                    <div class="fraction">${num2}<span>${den2}</span></div>
+                    <div>ما هي نتيجة الطرح؟</div>
+                `;
+            } else if (operation === 'multiply') {
+                const prodNum = num1 * num2;
+                const prodDen = den1 * den2;
+                correctAnswer = `${prodNum}/${prodDen}`;
+                document.getElementById('question').innerHTML = `
+                    <div class="fraction">${num1}<span>${den1}</span></div>
+                    × 
+                    <div class="fraction">${num2}<span>${den2}</span></div>
+                    <div>ما هي نتيجة الضرب؟</div>
+                `;
+            } else if (operation === 'divide') {
+                const divNum = num1 * den2;
+                const divDen = den1 * num2;
+                correctAnswer = `${divNum}/${divDen}`;
+                document.getElementById('question').innerHTML = `
+                    <div class="fraction">${num1}<span>${den1}</span></div>
+                    ÷ 
+                    <div class="fraction">${num2}<span>${den2}</span></div>
+                    <div>ما هي نتيجة القسمة؟</div>
+                `;
+            }
+            document.getElementById('answer').value = '';
+            document.getElementById('result').innerText = '';
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value;
+            const correctSound = document.getElementById('correctSound');
+            const wrongSound = document.getElementById('wrongSound');
+            const submitSound = document.getElementById('submitSound');
+
+            submitSound.play(); // تشغيل الصوت عند إرسال الإجابة
+
+            if (userAnswer === correctAnswer) {
+                document.getElementById('result').innerText = 'إجابة صحيحة!';
+                document.getElementById('result').className = 'correct'; // تأثير بصرية للإجابة الصحيحة
+                correctSound.play(); // تشغيل الصوت الصحيح
+            } else {
+                document.getElementById('result').innerText = `إجابة خاطئة. الإجابة الصحيحة هي: ${correctAnswer}`;
+                document.getElementById('result').className = 'wrong'; // تأثير بصرية للإجابة الخاطئة
+                wrongSound.play(); // تشغيل الصوت الخاطئ
+            }
+        }
+    </script>
+</body>
+</html>
